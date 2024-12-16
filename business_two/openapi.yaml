@@ -1,0 +1,182 @@
+openapi: 3.0.0
+info:
+  description: API to manage customers in a business system.
+  title: Business Management API
+  version: 1.0.0
+servers:
+- description: Production Server
+  url: https://api.business.com/v1
+- description: Staging Server
+  url: https://api-staging.business.com/v1
+paths:
+  /customers:
+    get:
+      description: Retrieve a list of all customers in the system.
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Customer'
+                type: array
+          description: A list of customers
+      summary: Get a list of customers
+    post:
+      description: Add a new customer to the system.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerCreate'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+          description: Customer created successfully
+      summary: Create a new customer
+  /customers/{customerId}:
+    delete:
+      description: Remove a customer from the system by ID.
+      parameters:
+      - description: ID of the customer to delete
+        explode: false
+        in: path
+        name: customerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Customer deleted successfully
+        "404":
+          description: Customer not found
+      summary: Delete a customer
+    get:
+      description: Retrieve details for a specific customer by ID.
+      parameters:
+      - description: ID of the customer to retrieve
+        explode: false
+        in: path
+        name: customerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+          description: Customer details
+        "404":
+          description: Customer not found
+      summary: Get customer details
+    put:
+      description: Update details for a specific customer.
+      parameters:
+      - description: ID of the customer to update
+        explode: false
+        in: path
+        name: customerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerUpdate'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+          description: Customer updated successfully
+        "404":
+          description: Customer not found
+      summary: Update a customer
+components:
+  schemas:
+    Customer:
+      example:
+        phone: phone
+        name: name
+        created_at: 2000-01-23T04:56:07.000+00:00
+        id: id
+        email: email
+      properties:
+        id:
+          description: Unique identifier for the customer
+          title: id
+          type: string
+        name:
+          description: Full name of the customer
+          title: name
+          type: string
+        email:
+          description: Email address of the customer
+          title: email
+          type: string
+        phone:
+          description: Phone number of the customer
+          title: phone
+          type: string
+        created_at:
+          description: Timestamp of when the customer was created
+          format: date-time
+          title: created_at
+          type: string
+      title: Customer
+      type: object
+    CustomerCreate:
+      example:
+        phone: phone
+        name: name
+        email: email
+      properties:
+        name:
+          description: Full name of the customer
+          title: name
+          type: string
+        email:
+          description: Email address of the customer
+          title: email
+          type: string
+        phone:
+          description: Phone number of the customer
+          title: phone
+          type: string
+      required:
+      - email
+      - name
+      title: CustomerCreate
+      type: object
+    CustomerUpdate:
+      example:
+        phone: phone
+        name: name
+        email: email
+      properties:
+        name:
+          description: Full name of the customer
+          title: name
+          type: string
+        email:
+          description: Email address of the customer
+          title: email
+          type: string
+        phone:
+          description: Phone number of the customer
+          title: phone
+          type: string
+      title: CustomerUpdate
+      type: object
