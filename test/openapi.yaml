@@ -1,0 +1,21 @@
+openapi: 3.0.0
+info:
+  title: Sample API
+  version: "1.0"
+servers:
+- url: /
+paths:
+  /pets:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  type: string
+                type: array
+          description: A list of pets.
+      summary: List all pets
+components:
+  schemas: {}
