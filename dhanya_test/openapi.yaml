@@ -1,0 +1,93 @@
+openapi: 3.0.0
+info:
+  description: API for dynamic pricing calculations.
+  title: dynamicPricing
+  version: "1.0"
+servers:
+- description: Production server
+  url: https://api.example.com/dynamicPricing
+- description: Staging server
+  url: https://api.staging.example.com/dynamicPricing
+paths:
+  /getPrice:
+    post:
+      operationId: calculatePrice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/calculatePrice_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/calculatePrice_200_response'
+          description: Successful response
+      summary: Calculates the suggested price.
+components:
+  schemas:
+    calculatePrice_request_Discount:
+      properties:
+        sellingPrice:
+          title: sellingPrice
+          type: integer
+        Margin:
+          title: Margin
+          type: integer
+        Product:
+          title: Product
+          type: string
+      required:
+      - Margin
+      - Product
+      - sellingPrice
+      title: calculatePrice_request_Discount
+      type: object
+    calculatePrice_200_response_Result:
+      example:
+        Reasoning: Reasoning
+        SuggestedPrice: 6.027456183070403
+        Code: 0
+      properties:
+        Code:
+          title: Code
+          type: integer
+        SuggestedPrice:
+          title: SuggestedPrice
+          type: number
+        Reasoning:
+          title: Reasoning
+          type: string
+      title: calculatePrice_200_response_Result
+      type: object
+    calculatePrice_request:
+      properties:
+        Discount:
+          $ref: '#/components/schemas/calculatePrice_request_Discount'
+      title: calculatePrice_request
+      type: object
+    calculatePrice_200_response:
+      example:
+        Result:
+          Reasoning: Reasoning
+          SuggestedPrice: 6.027456183070403
+          Code: 0
+      properties:
+        Result:
+          $ref: '#/components/schemas/calculatePrice_200_response_Result'
+      title: calculatePrice_200_response
+      type: object
+x-azure-apim-policies:
+  inbound:
+    rate-limit:
+      calls: 2
+      renewal-period: 60
+    set-header:
+    - name: Accept
+      value: application/json
+    - name: Content-Type
+      value: application/json
+    - name: api-token
+      value: 7af19d7a5b806a46bb57826e576c590c62ee91b303c8a06c1656d2d27a746b1c
